@@ -1,0 +1,6 @@
+INDEX VERSION 1.122+/home/developer/workspace/apius-core/projects/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+3036049265.index
+2039432188.index
+3068832169.index
+722521733.index
+4238997711.index

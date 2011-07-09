@@ -1,0 +1,3 @@
+#Fri Jul 08 22:28:15 CDT 2011
+runtimes=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<runtimes>\n  <runtime id\="Apache Tomcat v7.0" location\="/usr/share/apache-tomcat-7.0.12" name\="Apache Tomcat v7.0" runtime-type-id\="org.eclipse.jst.server.tomcat.runtime.70" timestamp\="0" vm-install-id\="1310182074390" vm-install-type-id\="org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType"/>\n</runtimes>\n
+eclipse.preferences.version=1
