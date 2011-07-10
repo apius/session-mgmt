@@ -25,15 +25,8 @@ import org.springframework.core.io.ClassPathResource;
 /**
  * <p>
  * If this application is run outside of a J2EE web container as a JSE application
- * then we need a way to point the application to our bean factory resource and 
- * start the component manually. 
- * </p>
- * Note that the <code>server</code> bean in the <code>identity-context.xml</code>
- * bean factory needs to be commented out so that the component "knows" to create
- * an HTTP server via the Restlet framework. Otherwise when running in a J2EE 
- * container, the container's HTTP connector is automatically chosen. Thus the
- * need to once again comment out the line doing the <code>server</code> injection
- * in the <code>identity-context.xml</code> file when running in a J2EE container.
+ * then we need to point the application to our JSE-specific bean factory resource 
+ * ("identity-context-jse.xml") and we need to start the component manually. 
  * </p>
  * 
  * @author Paul Morris
