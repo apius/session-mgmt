@@ -27,8 +27,6 @@ import org.springframework.core.io.ClassPathResource;
  * If this application is run outside of a J2EE web container as a JSE application
  * then we need to point the application to our JSE-specific bean factory resource 
  * ("identity-context-jse.xml") and we need to start the component manually. 
- * then we need a way to point the application to our bean factory resource and 
- * start the component manually. 
  * </p>
  * 
  * @author Paul Morris
