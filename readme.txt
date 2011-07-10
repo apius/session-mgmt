@@ -11,5 +11,6 @@ An API for the "REST" of us.
 
 3. DISTRIBUTION JAR FILES
 
+org.apius.server.identity.jar
 
 4. GETTING STARTED
