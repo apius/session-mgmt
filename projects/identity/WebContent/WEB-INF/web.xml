@@ -6,7 +6,7 @@
          version="3.0"> 
 		 
     <servlet>
-        <servlet-name>idservlet</servlet-name>
+        <servlet-name>identity</servlet-name>
         <servlet-class>org.restlet.ext.spring.RestletFrameworkServlet</servlet-class>
         <init-param>
             <param-name>targetRestletBeanName</param-name>
@@ -16,7 +16,7 @@
     </servlet>
   
     <servlet-mapping>
-        <servlet-name>idservlet</servlet-name>
+        <servlet-name>identity</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
   
