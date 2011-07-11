@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apius.server.identity.session;
+package org.apius.server;
 
 import org.restlet.Component;
 import org.springframework.beans.factory.BeanFactory;
