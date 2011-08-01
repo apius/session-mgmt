@@ -103,7 +103,7 @@ import org.restlet.util.Series;
  */
 public final class SessionImpl extends ServerResource implements Session {
 	
-	private String[] credentials;
+    private String[] credentials;
     private SessionProvisionerProxy sessionProvisionerProxy;
     private SessionAuthenticator sessionAuthenticator;
     private ResponseHelper responseHelper;
@@ -183,7 +183,7 @@ public final class SessionImpl extends ServerResource implements Session {
             if (!token.isEmpty()) {
                 setStatus(Status.SUCCESS_CREATED);
                 setLocationRef(getReference());
-                representation = responseHelper.writeCreateSessionXml(token, getReference().toString());
+                representation = responseHelper.writeCreateSessionXml(token);
                 addCookieSetting(token);     
             }	
         } catch (ResourceException e) {

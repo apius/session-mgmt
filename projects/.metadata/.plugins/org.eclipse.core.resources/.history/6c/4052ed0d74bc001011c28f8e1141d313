@@ -41,7 +41,7 @@ final class ResponseHelper {
     SaxRepresentation writeCreateSessionXml(String token, String baseRef) throws IOException {
         Entry entry = atomMessageBuilder.createEntry();
         Link link = 
-            atomMessageBuilder.createLink("OpenAM Session Attributes", baseRef + "/attributes", Relation.RELATED);
+            atomMessageBuilder.createLink("OpenAM Session Attributes", "/identity/session/attributes", Relation.RELATED);
         entry.setTitle(atomMessageBuilder.createText("OpenAM Session"));
         entry.setId(token);
         entry.getLinks().add(link);

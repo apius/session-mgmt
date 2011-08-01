@@ -2381,3 +2381,15 @@ Command-line arguments:  -os linux -ws gtk -arch x86 -data /home/developer/works
 
 !ENTRY org.eclipse.wst.server.core 4 0 2011-08-01 12:17:00.705
 !MESSAGE Server Tomcat v7.0 Server at localhost failed to start.
+!SESSION 2011-08-01 14:07:03.436 -----------------------------------------------
+eclipse.buildId=M20100909-0800
+java.version=1.6.0_20
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86
+
+!ENTRY org.eclipse.wst.server.core 4 0 2011-08-01 14:13:59.901
+!MESSAGE Server Tomcat v7.0 Server at localhost failed to start.
+
+!ENTRY org.eclipse.wst.server.core 4 0 2011-08-01 14:34:36.963
+!MESSAGE Server Tomcat v7.0 Server at localhost failed to start.

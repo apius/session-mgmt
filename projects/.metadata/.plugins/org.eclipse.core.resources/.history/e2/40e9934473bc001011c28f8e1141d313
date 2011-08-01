@@ -38,11 +38,11 @@ final class ResponseHelper {
      * @return SaxRepresentation
      * @throws IOException
      */
-    SaxRepresentation writeCreateSessionXml(String token, String baseRef) throws IOException {
+    SaxRepresentation writeCreateSessionXml(String token) throws IOException {
         Entry entry = atomMessageBuilder.createEntry();
         Link link = 
-            atomMessageBuilder.createLink("OpenAM Session Attributes", baseRef + "/attributes", Relation.RELATED);
-        entry.setTitle(atomMessageBuilder.createText("OpenAM Session"));
+            atomMessageBuilder.createLink("OpenAM Session Attributes", "/identity/session/attributes", Relation.RELATED);
+        entry.setTitle(atomMessageBuilder.createText("openam-session"));
         entry.setId(token);
         entry.getLinks().add(link);
         

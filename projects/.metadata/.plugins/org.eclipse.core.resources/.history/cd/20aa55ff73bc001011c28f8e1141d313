@@ -183,7 +183,7 @@ public final class SessionImpl extends ServerResource implements Session {
             if (!token.isEmpty()) {
                 setStatus(Status.SUCCESS_CREATED);
                 setLocationRef(getReference());
-                representation = responseHelper.writeCreateSessionXml(token, getReference().toString());
+                representation = responseHelper.writeCreateSessionXml(token);
                 addCookieSetting(token);     
             }	
         } catch (ResourceException e) {
