@@ -1,5 +1,0 @@
-package org.apius.spring;
-
-public class ApplicationContextProvider {
-
-}
