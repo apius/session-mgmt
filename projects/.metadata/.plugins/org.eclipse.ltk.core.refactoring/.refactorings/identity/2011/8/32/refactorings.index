@@ -1,0 +1,6 @@
+1312167298872	Rename resource 'identity-context-common.xml'
+1312167343061	Rename resource 'messaging-context-atom.xml'
+1312167378097	Rename resource 'identity-context-jee.xml'
+1312167403012	Rename resource 'identity-context-jse.xml'
+1312168475860	Move 'applicationContext-identity-common.xml' to 'identity'
+1312168500767	Move 1 resources to 'messaging'

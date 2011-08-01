@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+
+	Copyright 2010-2011 apius.org
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	
+	You may obtain a copy of the License at
+	
+	http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+
+-->
+
+<!-- This factory is made up of beans that are common to both the JEE and JSE implementations. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+    
+    <import resource="classpath:core-context.xml"/>                   
+	<import resource="classpath:messaging-context-atom.xml"/>
+
+    <bean id="component.context" class="org.springframework.beans.factory.config.PropertyPathFactoryBean" />
+	
+    <bean id="defaultHost" class="org.restlet.ext.spring.SpringHost">
+	   <constructor-arg ref="component" />
+	   <property name="defaultAttachment" ref="openAmSessionApplication" />
+    </bean>
+    
+    <bean id="componentChildContext" class="org.restlet.Context">
+	   <lookup-method name="createChildContext" bean="component.context" />
+    </bean>
+	
+	<bean id="engine" class="org.restlet.engine.Engine" factory-method="getInstance">
+        <property name="registeredAuthenticators">
+            <list>
+                <bean class="org.apius.server.identity.session.SessionAuthenticatorHelper" />
+                <bean class="org.restlet.engine.http.security.HttpBasicHelper" />
+            </list>
+        </property>
+    </bean>
+	
+    <bean id="openAmSession" class="org.apius.server.identity.session.server.openam.SessionImpl" scope="prototype">
+        <constructor-arg ref="openAmSessionProvisionerProxy" />
+        <constructor-arg ref="openAmAuthenticator" />
+        <constructor-arg ref="openAmResponseBuilder" />
+        <constructor-arg ref="cookieSetting" />
+    </bean>
+    
+    <bean id="cookieSetting" class="org.restlet.data.CookieSetting"/>
+    
+    <bean id="openAmResponseParser" class="org.apius.server.identity.session.client.openam.ResponseParser" scope="prototype">
+        <constructor-arg ref="atomMessageBuilder" />
+    </bean>
+    
+    <bean id="openAmResponseBuilder" class="org.apius.server.identity.session.server.openam.ResponseBuilder" scope="prototype">
+        <constructor-arg ref="atomMessageBuilder" />
+    </bean>
+	
+    <bean id="openAmSessionProvisionerProxy" class="org.apius.server.identity.session.client.openam.SessionProvisionerProxyImpl" scope="prototype">
+        <constructor-arg value="http://devbox.apius.org:8080/openam" />
+        <constructor-arg ref="openAmResponseParser" />
+    </bean>
+    
+    <bean id="openAmSessionAttributes" class="org.apius.server.identity.session.server.openam.SessionAttributesImpl" scope="prototype">
+        <constructor-arg ref="openAmSessionProvisionerProxy" />
+        <constructor-arg ref="openAmAuthenticator" />
+    </bean>
+    
+    <bean id="openAmAuthenticator" class="org.apius.server.identity.session.filter.SessionAuthenticator">
+        <constructor-arg ref="componentChildContext" />
+        <constructor-arg value="nmpg" />
+        <constructor-arg ref="openAmSessionVerifier" />
+        <constructor-arg ref="openAmSessionProvisionerProxy" />
+    </bean>
+
+    <bean id="openAmAuthorizer" class="org.apius.server.identity.session.filter.SessionAuthorizer">
+        <constructor-arg ref="openAmSessionProvisionerProxy" />
+    </bean>
+	
+    <bean id="openAmSessionVerifier" class="org.apius.server.identity.session.SessionVerifier">
+	   <constructor-arg ref="openAmSessionProvisionerProxy" />
+    </bean>
+	
+</beans>

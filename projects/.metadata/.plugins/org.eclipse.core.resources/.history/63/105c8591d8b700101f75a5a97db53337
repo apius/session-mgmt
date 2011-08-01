@@ -1,0 +1,61 @@
+package org.apius.messaging.atom;
+
+import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
+import org.restlet.ext.atom.Entry;
+import org.restlet.ext.atom.Link;
+import org.restlet.ext.atom.Relation;
+import org.restlet.ext.atom.Text;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+
+public class AtomMessageBuilder implements ApplicationContextAware {
+    
+    private ApplicationContext appCxt;
+    
+    public Entry createEntry() {
+        Entry entry = (Entry) appCxt.getBean("atomEntry");
+        entry.setIgnoringExtraWhitespaces(true);
+        
+        return entry;
+    }
+    
+    public Text createText(String content) {
+        Text text = (Text) appCxt.getBean("atomText");
+        text.setContent(content);
+        
+        return text;
+    }
+    
+    public Text createText(MediaType type) {
+        Text text = (Text) appCxt.getBean("atomText");
+        text.setType(type);
+        
+        return text;
+    }
+    
+    public Text createText(MediaType type, String content) {
+        Text text = (Text) appCxt.getBean("atomText");
+        text.setContent(content);
+        text.setType(type);
+        
+        return text;
+    }
+    
+    public Link createLink(String title, String href, Relation rel) {
+        Link link = (Link) appCxt.getBean("atomLink");
+        link.setTitle(title);
+        Reference ref = (Reference) appCxt.getBean("reference");
+        link.setHref(href);
+        link.setRel(rel);
+        
+        return link;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext appCxt) throws BeansException {
+        this.appCxt = appCxt;
+    }
+    
+}

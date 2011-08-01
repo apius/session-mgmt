@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+    Copyright 2010-2011 apius.org
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+
+<!-- This factory is made up of beans that are specific to the JSE implementation. -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">   
+	
+    <import resource="classpath:identity-context-common.xml"/>
+	 
+    <bean id="component" class="org.restlet.ext.spring.SpringComponent">
+        <property name="name" value="APIUS Identity Component - JSE" />
+        <property name="description" value="Authentication and authorization. Session management." />
+        <property name="owner" value="apius.org" />
+        <property name="author" value="Paul Morris" />
+        <property name="server" ref="server" />
+        <property name="clientsList">
+            <list>
+                <value>http</value>
+                <value>clap</value>
+            </list>
+        </property>      
+        <property name="defaultHost" ref="defaultHost" />
+    </bean>
+    
+    <bean id="server" class="org.restlet.ext.spring.SpringServer">
+        <constructor-arg value="http" />
+        <constructor-arg value="8182" />
+    </bean>
+	
+    <bean id="openAmSessionApplication" class="org.restlet.Application">
+        <constructor-arg ref="componentChildContext" />
+        <property name="name" value="OpenAM Session Application - JSE"/>
+        <property name="description" value="The APIUS session API meets the OpenAM RESTful API." />
+        <property name="owner" value="apius.org" />
+        <property name="author" value="Paul Morris" />
+        <property name="inboundRoot">
+            <bean class="org.restlet.ext.spring.SpringRouter">
+                <constructor-arg ref="componentChildContext" />
+				
+                <!-- Have to add the "/identity" here since we're not running in a web container 
+                     such that it could be added as context in the container's config. -->
+                <property name="attachments">
+                    <map>
+                        <entry key="/identity/session">
+                            <bean class="org.restlet.ext.spring.SpringFinder">
+                                <lookup-method name="create" bean="openAmSession" />
+                            </bean>
+                        </entry>
+                        <entry key="/identity/session/attributes">
+                            <bean class="org.restlet.ext.spring.SpringFinder">
+                                <lookup-method name="create" bean="openAmSessionAttributes" />
+                            </bean>
+                        </entry>
+                    </map>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    	
+</beans>
