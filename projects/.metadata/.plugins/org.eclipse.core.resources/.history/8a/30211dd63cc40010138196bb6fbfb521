@@ -1,0 +1,7 @@
+package org.apius.server.identity.session.client.openam;
+
+import org.restlet.resource.ClientResource;
+
+public class TestResource extends ClientResource {
+
+}

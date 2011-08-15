@@ -1,0 +1,16 @@
+
+public class Test {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String foobar = "foobar";
+		
+		if (foobar != ("bar" || "foo")) {
+			System.out.println("nope");
+		}
+
+	}
+
+}

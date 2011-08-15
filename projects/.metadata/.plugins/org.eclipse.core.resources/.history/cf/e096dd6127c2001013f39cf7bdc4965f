@@ -1,0 +1,81 @@
+/**
+ * Copyright 2010-2011 apius.org
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * 
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apius.server.identity.session;
+
+import org.apius.server.identity.session.client.openam.SessionProvisionerProxyImpl;
+import org.apius.server.identity.session.server.Session;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.data.Status;
+import org.restlet.resource.ResourceException;
+import org.restlet.security.Verifier;
+
+/**
+ * <p>
+ * Verifies that the token represents a valid session within the session 
+ * provisioner. Part of the authentication engine.
+ * </p>
+ * 
+ * @author Paul Morris
+ * 
+ */
+public class SessionVerifier implements Verifier {
+	
+    private SessionProvisionerProxyImpl sessionProvisionerProxy;
+    
+    /**
+     * Constructor
+     * 
+     * @param sessionProvisionerProxy
+     */
+    public SessionVerifier(Session sessionProvisionerProxy) {
+    	this.sessionProvisionerProxy = (SessionProvisionerProxyImpl) sessionProvisionerProxy;
+    }
+    
+    @Override
+    public int verify(Request request, Response response) {
+    	int result = RESULT_UNKNOWN;
+    	
+        if (request.getChallengeResponse() != null) {
+            handleVerify(request.getChallengeResponse().getRawValue());
+        } else {
+            result = RESULT_MISSING;
+        }
+    	
+        return result;
+    }
+    
+    private int handleVerify(String token) {
+        int result = RESULT_UNKNOWN;
+
+        try {
+            if (sessionProvisionerProxy.isAuthenticated(token)) {
+                result = RESULT_VALID;
+            }
+        } catch (ResourceException e) {
+            if (e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
+                result = RESULT_INVALID;
+            }
+        } catch (Exception e) {
+            result = RESULT_UNKNOWN;
+        }
+        
+        return result;
+    }
+	
+}

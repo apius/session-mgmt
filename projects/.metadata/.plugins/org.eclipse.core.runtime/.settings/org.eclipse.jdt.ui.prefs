@@ -1,0 +1,21 @@
+#Thu Aug 11 09:41:17 CDT 2011
+content_assist_proposals_foreground=24,22,20
+spelling_locale_initialized=true
+org.eclipse.jdt.ui.text.templates_migrated=true
+useAnnotationsPrefPage=true
+eclipse.preferences.version=1
+org.eclipse.jface.textfont=1|Monospace|10.0|0|GTK|1|;
+tabWidthPropagated=true
+org.eclipse.jdt.ui.editor.tab.width=
+fontPropagated=true
+org.eclipse.jdt.ui.text.custom_code_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+org.eclipse.jdt.ui.javadoclocations.migrated=true
+proposalOrderMigrated=true
+content_assist_proposals_background=255,255,255
+org.eclipse.jdt.ui.formatterprofiles.version=11
+org.eclipse.jdt.internal.ui.navigator.layout=2
+content_assist_number_of_computers=13
+useQuickDiffPrefPage=true
+org.eclipse.jdt.ui.text.custom_templates=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><templates/>
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="org.apius.server.identity.session.server.Session"><rhs name\="org.apius.server.identity.session.client.openam.SessionProvisionerProxyImpl"/></lhs><lhs name\="org.restlet.resource.ClientResource"><rhs name\="org.apius.server.identity.session.client.openam.SessionProvisionerProxyImpl"/></lhs><lhs name\="org.restlet.resource.UniformResource"><rhs name\="org.apius.server.identity.session.client.openam.SessionProvisionerProxyImpl"/></lhs><lhs name\="java.util.Collection"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.lang.Iterable"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.util.List"><rhs name\="java.util.ArrayList"/></lhs><lhs name\="java.lang.CharSequence"><rhs name\="java.lang.StringBuffer"/><rhs name\="java.lang.StringBuilder"/></lhs><lhs name\="java.lang.AbstractStringBuilder"><rhs name\="java.lang.StringBuffer"/><rhs name\="java.lang.StringBuilder"/></lhs><lhs name\="java.lang.Appendable"><rhs name\="java.lang.StringBuffer"/><rhs name\="java.lang.StringBuilder"/></lhs><lhs name\="org.restlet.ext.xml.SaxRepresentation"><rhs name\="org.restlet.ext.atom.Entry"/></lhs><lhs name\="org.restlet.ext.xml.XmlRepresentation"><rhs name\="org.restlet.ext.atom.Entry"/></lhs><lhs name\="javax.xml.namespace.NamespaceContext"><rhs name\="org.restlet.ext.atom.Entry"/></lhs><lhs name\="org.restlet.representation.WriterRepresentation"><rhs name\="org.restlet.ext.atom.Entry"/></lhs><lhs name\="org.restlet.representation.CharacterRepresentation"><rhs name\="org.restlet.ext.atom.Entry"/><rhs name\="org.restlet.representation.StringRepresentation"/></lhs><lhs name\="org.restlet.representation.Representation"><rhs name\="org.restlet.ext.atom.Entry"/><rhs name\="org.restlet.representation.StringRepresentation"/></lhs><lhs name\="org.restlet.representation.RepresentationInfo"><rhs name\="org.restlet.ext.atom.Entry"/><rhs name\="org.restlet.representation.StringRepresentation"/></lhs><lhs name\="org.restlet.representation.Variant"><rhs name\="org.restlet.ext.atom.Entry"/><rhs name\="org.restlet.representation.StringRepresentation"/></lhs><lhs name\="org.restlet.ext.atom.Entry"><rhs name\="org.restlet.ext.atom.Entry"/></lhs><lhs name\="java.util.Map"><rhs name\="java.util.HashMap"/></lhs><lhs name\="org.restlet.ext.atom.Text"><rhs name\="org.restlet.ext.atom.Text"/></lhs><lhs name\="org.restlet.ext.atom.Content"><rhs name\="org.restlet.ext.atom.Content"/></lhs><lhs name\="org.restlet.ext.atom.Link"><rhs name\="org.restlet.ext.atom.Link"/></lhs><lhs name\="org.restlet.data.Reference"><rhs name\="org.restlet.data.Reference"/></lhs><lhs name\="org.restlet.ext.atom.Relation"><rhs name\="org.restlet.ext.atom.Relation"/></lhs><lhs name\="org.restlet.representation.StringRepresentation"><rhs name\="org.restlet.representation.StringRepresentation"/></lhs></history>
+org.eclipse.jdt.ui.text.code_templates_migrated=true

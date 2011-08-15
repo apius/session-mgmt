@@ -1,0 +1,37 @@
+package org.apius.server.identity.session.server.openam;
+
+import org.restlet.ext.atom.Entry;
+import org.restlet.ext.atom.Text;
+
+/**
+ * 
+ * <p>
+ * Helper class to build response entities corresponding to calls to the resource
+ * representing a session within the <a href="forgerock.com/openam.html">OpenAM</a> 
+ * session provisioner, authenticator and authorizer application.
+ * </p>
+ * <p>
+ * Methods are not publicized outside of the package since this class is designed solely 
+ * to help the <code>SessionImpl</code> class to construct response entities before  
+ * returning them to the client.
+ * </p>
+ * 
+ * @author Paul Morris
+ * 
+ */
+final class ResponseHelper {
+    
+    /**
+     * @param token
+     * @param baseRef
+     * @return Entry
+     */
+    Entry writeCreateSessionEntry(String token, String baseRef) {
+        Entry entry = new Entry();
+    	entry.setTitle(new Text("OpenAM Session"));
+        entry.setId(token);
+        
+        return entry;
+    }
+
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+
+    Copyright 2010-2011 apius.org
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    
+    You may obtain a copy of the License at
+    
+    http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+                           http://www.springframework.org/schema/util 
+                           http://www.springframework.org/schema/util/spring-util-2.5.xsd">   
+    
+    <bean id="atomMessageBuilder" class="org.apius.messaging.atom.AtomMessageBuilder" scope="prototype">
+        <property name="feed">
+            <bean class="org.restlet.ext.atom.Feed" scope="prototype"/>
+        </property>
+        <property name="entry">
+            <bean class="org.restlet.ext.atom.Entry" scope="prototype"/>
+        </property>
+        <property name="text">
+            <bean class="org.restlet.ext.atom.Text" scope="prototype">
+                <constructor-arg value="" />
+            </bean>
+        </property>
+        <property name="link">
+            <bean class="org.restlet.ext.atom.Link" scope="prototype"/>
+        </property>
+        <property name="content">
+            <bean class="org.restlet.ext.atom.Content" scope="prototype"/>
+        </property>
+        <property name="ref">
+            <bean class="org.restlet.data.Reference" scope="prototype"/>
+        </property> 
+        <property name="stringRepresentation">
+            <bean class="org.restlet.representation.StringRepresentation" scope="prototype">
+            	<constructor-arg value="" />
+            </bean>
+        </property>
+    </bean>
+    
+</beans>

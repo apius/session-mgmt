@@ -1,0 +1,208 @@
+/**
+* Copyright 2010-2011 apius.org
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+*
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+package org.apius.messaging.atom;
+
+import org.restlet.data.MediaType;
+import org.restlet.data.Reference;
+import org.restlet.ext.atom.Content;
+import org.restlet.ext.atom.Entry;
+import org.restlet.ext.atom.Feed;
+import org.restlet.ext.atom.Link;
+import org.restlet.ext.atom.Relation;
+import org.restlet.ext.atom.Text;
+import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
+
+/**
+* <p>
+* Helper class based on the <a href="www.restlet,org">Restlet</a> Atom extension.
+* The idea is to have a central place to inject (using Spring) classes making up
+* the Restlet extension as well as provide convenience methods for constructing
+* the various elements of Atom messages from across the entire scope of the
+* internal API. It should be noted that the class is not "Spring aware" however.
+*
+* @author Paul Morris
+*
+*/
+public class AtomMessageBuilder {
+    
+    private Feed feed;
+    private Entry entry;
+    private Text text;
+    private Link link;
+    private Reference ref;
+    private Content content;
+    private StringRepresentation stringRepresentation;
+    
+    /**
+     * 
+     * @return feed
+     */
+    public Feed createFeed() {
+        return feed;
+    }
+    
+    /**
+	 *
+	 * @return Entry
+	 */
+    public Entry createEntry() {
+        return entry;
+    }
+    
+    /**
+	 *
+	 * @param content
+	 * @return Text
+	 */
+    public Text createText(String content) {
+        text.setContent(content);
+        
+        return text;
+    }
+    
+    /**
+     *
+     * @param type
+     * @return Text
+     */
+    public Text createText(MediaType type) {
+        text.setType(type);
+        
+        return text;
+    }
+    
+    /**
+	 *
+	 * @param type
+	 * @param content
+	 * @return Text
+	 */
+    public Text createText(MediaType type, String content) {
+        text.setContent(content);
+        text.setType(type);
+        
+        return text;
+    }
+    
+    /**
+	 *
+	 * @param title
+	 * @param href
+	 * @param rel
+	 * @return Link
+	 */
+    public Link createLink(String title, String href, Relation rel) {
+        link.setTitle(title);
+        ref.setPath(href);
+        link.setHref(ref);
+        link.setRel(rel);
+        
+        return link;
+    }
+    
+    /**
+	 *
+	 * @return Content
+	 */
+    public Content createContent() {
+        return content;
+    }
+    
+    public Content createContent(String inlineContent) {
+    	stringRepresentation.setText(inlineContent);
+    	content.setInlineContent(stringRepresentation);
+    	
+        return content;
+    }
+    
+    /**
+     *
+	 * @param inlineContent
+	 * @return Content
+	 */
+    public Content createContent(Representation inlineContent) {
+        content.setInlineContent(inlineContent);
+        content.setToEncode(false);
+        
+        return content;
+    }
+    
+    /**
+	 * Setter injection
+	 *
+	 * @param feed
+	 */
+    public void setFeed(Feed feed) {
+        this.feed = feed;
+    }
+    
+    /**
+	 * Setter injection
+	 *
+	 * @param entry
+	 */
+    public void setEntry(Entry entry) {
+        this.entry = entry;
+    }
+    
+    /**
+	 * Setter injection
+	 *
+	 * @param text
+	 */
+    public void setText(Text text) {
+        this.text = text;
+    }
+    
+    /**
+     * Setter injection
+     *
+     * @param link
+     */
+    public void setLink(Link link) {
+        this.link = link;
+    }
+    
+    /**
+	 * Setter injection
+	 *
+	 * @param ref
+	 */
+    public void setRef(Reference ref) {
+        this.ref = ref;
+    }
+    
+    /**
+	 * Setter injection
+	 *
+	 * @param content
+	 */
+    public void setContent(Content content) {
+        this.content = content;
+    }
+    
+    /**
+     * Setter injection
+     * 
+     * @param stringRepresentation
+     */
+    public void setStringRepresentation(StringRepresentation stringRepresentation) {
+    	this.stringRepresentation = stringRepresentation;
+    }
+}

@@ -1,0 +1,5 @@
+package org.apius.messaging.atom;
+
+public class AtomMessageBuilder {
+
+}

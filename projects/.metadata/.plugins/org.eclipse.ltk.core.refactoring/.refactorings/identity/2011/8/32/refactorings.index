@@ -1,0 +1,17 @@
+1312212450558	Copy file
+1312212788478	Delete elements
+1312213144405	Move file
+1312213153859	Move files
+1312213615117	Rename resource 'applicationContext-messaging.xml'
+1312213633977	Rename resource 'applicationContext-identity-jse.xml'
+1312213801622	Rename resource 'applicationContext-identity-jee.xml'
+1312213820717	Rename resource 'applicationContext-identity-common.xml'
+1312213837945	Move 1 resources to 'messaging'
+1312213846342	Move 1 resources to 'identity'
+1312213863481	Move 'identityContext.xml' to 'identity'
+1312214789035	Copy file
+1312214805253	Copy files
+1312215418133	Delete elements
+1312215648784	Move 1 resources to 'src'
+1312215656344	Move 'identityContext.xml' to 'src'
+1312239937442	Copy file

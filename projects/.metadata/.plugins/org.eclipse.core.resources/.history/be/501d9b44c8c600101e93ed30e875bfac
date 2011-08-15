@@ -1,0 +1,348 @@
+/**
+ * Copyright 2010-2011 apius.org
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * 
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.apius.server.identity.session.server.openam;
+
+import org.apius.server.identity.session.Session;
+import org.apius.server.identity.session.SessionCookieSettings;
+import org.apius.server.identity.session.client.openam.SessionProvisionerProxy;
+import org.apius.server.identity.session.filter.SessionAuthenticator;
+import org.restlet.data.ChallengeScheme;
+import org.restlet.data.CookieSetting;
+import org.restlet.data.Form;
+import org.restlet.data.Status;
+import org.restlet.representation.Representation;
+import org.restlet.resource.ResourceException;
+import org.restlet.resource.ServerResource;
+import org.restlet.security.User;
+import org.restlet.util.Series;
+
+/**
+ * <p>
+ * Implementation of the <code>Session</code> interface for the <a href="forgerock.com/openam.html">
+ * OpenAM</a> session provisioner, authenticator and authorizer application.
+ * </p>
+ * <p>
+ * <b><em>Public API Contract</em></b>
+ * </p>
+ * <p>
+ * <b>POST</b>
+ * </p>
+ * <p>
+ * Looks for the username and password in the request. Two methods of passing those values are 
+ * supported. The credentials may be passed in as parameters in the entity body of the request 
+ * as in:
+ * </p>
+ * <p>
+ * <code>POST /{service_url}</code>
+ * </p><p>
+ * <code>username=pmorris&password=secret</code>
+ * </p>
+ * <p>
+ * The credentials may also be sent following the w3 standard for HTTP Basic Authentication, 
+ * namely a colon-delimited ("pmorris:secret") and Base64 encoded string pair, as in:
+ * </p>
+ * <p>
+ * <code>Authorization: Basic cG1vcnJpczpzZWNyZXQ=</code>
+ * </p>
+ * <p>
+ * In either case the method extracts the credentials and passes them into the <code>ClientResource
+ * </code>object implementing the <code>Session</code> interface to request a session token to be 
+ * provisioned.
+ * </p>
+ * <p>
+ * If a token is provisioned, it will be sent back to the client in a cookie along with an HTTP 201
+ * status code. The purpose of the cookie is NOT however to be sent along with each request across 
+ * the entire scope of the API. Its sole purpose is to serve as a client-side container to store the 
+ * session token value. It's the Authorization header that will be checked by the Filter objects 
+ * across our API's scope to grant or deny access to resources.
+ * </p>
+ * <p>
+ * An Atom Feed representing the newly created session is also returned.
+ * </p>
+ * <p>
+ * The <code>ClientResource</code>object implementing the <code>Session</code> interface is the 
+ * session provisioner proxy. Not exposing this proxy object to the public API allows us to 
+ * 1) design our own RESTful interface for managing sessions across our API and 2) keep the public 
+ * contract consistent even if more than one stateful session provisioner (more than one 
+ * implementation of our session interface) is introduced into the scope of the API.
+ * </p>
+ * <p>
+ * <b>GET</b>
+ * </p>
+ * <p>
+ * The token value must be included in the Authorization header of the request as in:
+ * </p>
+ * <p>
+ * <code>Authorization: APIUS token=AQIC5wM2LY4SfcwGgIvSF9oEp5y7rZl[...]</code>
+ * </p>
+ * <p>
+ * If it finds this value then the the OpenAM server is called to return all known attributes and 
+ * roles associated with the session represented by the token. The output string is converted to
+ * an Atom feed for easier parsing client side.
+ * </p>
+ * <p>
+ * <b>PUT</b>
+ * </p>
+ * <p>
+ * The token value must be included in the Authorization header of the request as in:
+ * </p>
+ * <p>
+ * <code>Authorization: APIUS token=AQIC5wM2LY4SfcwGgIvSF9oEp5y7rZl[...]</code>
+ * </p>
+ * <p>
+ * If it finds this value then the user is requesting for the session to be refreshed and/or for
+ * the token representing a session to be validated. The <code>ClientInfo</code> is set to <code>
+ * authenticated</code>. The user identifier is used to construct a <code>User</code> object which
+ * is attached to the <code>ClientInfo</code>.
+ * </p>
+ * <p>
+ * <b>DELETE</b>
+ * </p>
+ * <p>
+ * Invalidates the session represented by the token passed in as a parameter, effectively logging 
+ * out the user. The token value must be included in the Authorization header of the request 
+ * as in:
+ * </p>
+ * <p>
+ * <code>Authorization: APIUS token=AQIC5wM2LY4SfcwGgIvSF9oEp5[...]</code>
+ * </p>
+ * 
+ * @author Paul Morris
+ * 
+ */
+public final class SessionImpl extends ServerResource implements Session {
+	
+    private SessionProvisionerProxy sessionProvisionerProxy;
+    private SessionAuthenticator sessionAuthenticator;
+    private CookieSetting cookieSetting;
+    private String token;
+    
+    /**
+     * Constructor
+     * 
+     * @param sessionProvisionerProxy
+     * @param sessionAuthenticator
+     * @param responseHelper
+     * @param cookieSetting
+     */
+    public SessionImpl(Session sessionProvisionerProxy, 
+                       SessionAuthenticator sessionAuthenticator,
+                       CookieSetting cookieSetting) {
+        this.sessionProvisionerProxy = (SessionProvisionerProxy) sessionProvisionerProxy;
+        this.sessionAuthenticator = sessionAuthenticator;
+        this.cookieSetting = cookieSetting;
+    }
+
+    /**
+     * POST operation used to request the session provisioner to create a session
+     * and return an Atom Feed of the session attributes.
+     * 
+     * @param Form with identifier/secret parameters
+     * @return Representation of the newly created session's attributes
+     */
+    public Representation createSession(Form form) {
+        Representation representation = null;
+        
+        if (formHasCorrectParameters(form)) {
+        	representation = handleCreateSession(form);
+        } else if (requestHasCredentialsInAuthHeader()) {
+        	form = new Form();
+        	form.add("username", getChallengeResponse().getIdentifier());
+        	form.add("password", new String(getChallengeResponse().getSecret()));
+        	representation = handleCreateSession(form);
+        } else {
+        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        }
+        
+        return representation;
+    }
+    
+    private boolean formHasCorrectParameters(Form form) {
+    	boolean formHasCorrectParameters;
+    	
+    	if (form != null) {
+    		formHasCorrectParameters = (form.getFirst("username") != null && form.getFirst("password") != null);
+    	} else {
+    		formHasCorrectParameters = false;
+    	}
+    	
+    	return formHasCorrectParameters;
+    }
+    
+    private boolean requestHasCredentialsInAuthHeader() {
+        return (getChallengeResponse() != null && getChallengeResponse().getScheme().equals(ChallengeScheme.HTTP_BASIC));
+    }
+    
+    private Representation handleCreateSession(Form form) {
+    	Representation representation = null;
+    	
+    	try {
+            token = sessionProvisionerProxy.createSession(form).getText();
+            
+            if (!token.isEmpty()) {
+                setStatus(Status.SUCCESS_CREATED);
+                setLocationRef(getReference());
+                representation = sessionProvisionerProxy.getAttributes();
+                addCookieSetting(token);     
+            }	
+        } catch (ResourceException e) {
+            handleResourceException(e);
+        } catch (Exception e) {
+            handleException(e.getMessage());
+        }
+        
+        return representation;
+    }
+    
+    private void addCookieSetting(String token) {
+        cookieSetting.setVersion(SessionCookieSettings.version);
+        cookieSetting.setName(SessionCookieSettings.name);
+        cookieSetting.setValue("token=" + token);
+        cookieSetting.setPath(getOriginalRef().getPath());
+        cookieSetting.setComment(SessionCookieSettings.comment);
+        cookieSetting.setMaxAge(SessionCookieSettings.maxAge);
+        cookieSetting.setSecure(SessionCookieSettings.secure);
+        cookieSetting.setAccessRestricted(SessionCookieSettings.accessRestricted);
+        
+        Series<CookieSetting> cookieSettings = this.getCookieSettings();
+        cookieSettings.clear();
+        cookieSettings.add(cookieSetting);
+        this.setCookieSettings(cookieSettings);
+    }
+    
+    /**
+     * GET operation responds with all known attributes and roles associated with the OpenAM
+     * session represented by the token.
+     * 
+     * @return Representation of session attributes
+     */
+    public Representation getAttributes() {
+        Representation representation = null;
+
+        if (getChallengeResponse() != null) {
+        	extractTokenAndSetValues();
+        	representation = getAttributesRepresentation();
+        } else {
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        }
+        
+        return representation;
+    }
+    
+    private Representation getAttributesRepresentation() {
+    	Representation representation = null;
+    	
+    	try {
+    		extractTokenAndSetValues();
+    		representation = sessionProvisionerProxy.getAttributes();
+    	} catch (ResourceException e) {
+    	    handleResourceException(e);
+    	} catch (Exception e) {
+    	    handleException(e.getMessage());
+    	}
+    	
+    	return representation;
+    }
+    
+    /**
+     * <p>
+     * PUT operation verifies that the session associated with the token is valid but
+     * also refreshes the time left before OpenAM imposes an inactive timeout. 
+     * </p>
+     * <p>
+     * If the session provisioner proxy authenticates the token it will set its <code>
+     * ClientInfo authenticated</code> property to <code>true</code>. We need to set the 
+     * same property in the <code>ServerResource</code> (this object) <code>ClientInfo
+     * </code> and copy the <code>User</code> object constructed in the session provisioner
+     * proxy to the <code>setUser</code> setter of this object's <code>ClientInfo</code>. 
+     * 
+     * @return void
+     */
+    public void authenticateToken() {
+        if (getChallengeResponse() != null) {
+            try {
+            	extractTokenAndSetValues();
+            	sessionProvisionerProxy.authenticateToken();
+            	User authenticatedUser = sessionProvisionerProxy.getClientInfo().getUser();
+            	getRequest().getClientInfo().setUser(authenticatedUser);
+            	getRequest().getClientInfo().setAuthenticated(true);
+            } catch (ResourceException e) {
+                handleResourceException(e);
+            } catch (Exception e) {
+                handleException(e.getMessage());
+            }	
+        } else {
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        }
+    }
+    
+    /**
+     * DELETE operation to invalidate the session and effectively log out the
+     * user.
+     * 
+     * @return void
+     */
+    public void logout() {
+        if (getChallengeResponse() != null) {
+            try {
+            	extractTokenAndSetValues();
+            	sessionProvisionerProxy.logout();
+            } catch (ResourceException e) {
+                handleResourceException(e);
+            } catch (Exception e) {
+                handleException(e.getMessage());
+            }	
+        } else {
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+        }
+    }
+    
+    private void extractTokenAndSetValues() {
+    	token = getChallengeResponse().getRawValue();
+    	sessionProvisionerProxy.setToken(token);
+    }
+	
+    /**
+     * To determine whether the authenticated user represented by the session token
+     * is authorized to perform the given HTTP method on the resource at the given URI.
+     *  
+     * @param token
+     * @param uri
+     * @param method
+     * @return boolean indicating whether the session represented by the token is
+     * 		   authorized to perform the given method on the resource at the uri 
+     */
+	public boolean isAuthorized(String token, String uri, String method) {
+		return sessionProvisionerProxy.isAuthorized(uri, method, token);
+	}
+	
+    private void handleResourceException(ResourceException e) {
+        if (e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
+            sessionAuthenticator.challenge(getResponse(), false);
+        } else {
+            setStatus(e.getStatus(), e.getMessage());
+        }
+    }
+    
+    private void handleException(String message) {
+    	handleResourceException(new ResourceException(Status.SERVER_ERROR_INTERNAL, message));
+    }
+    
+    public void setToken(String token) {
+    }
+}
