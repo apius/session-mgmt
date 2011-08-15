@@ -42,7 +42,7 @@ public class SessionVerifier implements Verifier {
      * @param sessionProvisionerProxy
      */
     public SessionVerifier(Session sessionProvisionerProxy) {
-    	this.sessionProvisionerProxy = sessionProvisionerProxy;
+        this.sessionProvisionerProxy = sessionProvisionerProxy;
     }
     
     @Override
@@ -62,9 +62,9 @@ public class SessionVerifier implements Verifier {
         int result = RESULT_UNKNOWN;
 
         try {
-        	sessionProvisionerProxy.setToken(request.getChallengeResponse().getRawValue());
-        	sessionProvisionerProxy.authenticateToken();
-        	result = RESULT_VALID;
+            sessionProvisionerProxy.setToken(request.getChallengeResponse().getRawValue());
+            sessionProvisionerProxy.authenticateToken();
+            result = RESULT_VALID;
         } catch (ResourceException e) {
             if (e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
                 result = RESULT_INVALID;

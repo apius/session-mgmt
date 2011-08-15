@@ -160,29 +160,29 @@ public final class SessionImpl extends ServerResource implements Session {
         Representation representation = null;
         
         if (formHasCorrectParameters(form)) {
-        	representation = handleCreateSession(form);
+            representation = handleCreateSession(form);
         } else if (requestHasCredentialsInAuthHeader()) {
-        	form = new Form();
-        	form.add("username", getChallengeResponse().getIdentifier());
-        	form.add("password", new String(getChallengeResponse().getSecret()));
-        	representation = handleCreateSession(form);
+            form = new Form();
+            form.add("username", getChallengeResponse().getIdentifier());
+            form.add("password", new String(getChallengeResponse().getSecret()));
+            representation = handleCreateSession(form);
         } else {
-        	setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         }
         
         return representation;
     }
     
     private boolean formHasCorrectParameters(Form form) {
-    	boolean formHasCorrectParameters;
+        boolean formHasCorrectParameters;
     	
-    	if (form != null) {
-    		formHasCorrectParameters = (form.getFirst("username") != null && form.getFirst("password") != null);
-    	} else {
-    		formHasCorrectParameters = false;
-    	}
+        if (form != null) {
+            formHasCorrectParameters = (form.getFirst("username") != null && form.getFirst("password") != null);
+        } else {
+            formHasCorrectParameters = false;
+        }
     	
-    	return formHasCorrectParameters;
+        return formHasCorrectParameters;
     }
     
     private boolean requestHasCredentialsInAuthHeader() {
@@ -190,9 +190,9 @@ public final class SessionImpl extends ServerResource implements Session {
     }
     
     private Representation handleCreateSession(Form form) {
-    	Representation representation = null;
+        Representation representation = null;
     	
-    	try {
+        try {
             token = sessionProvisionerProxy.createSession(form).getText();
             
             if (!token.isEmpty()) {
@@ -236,8 +236,8 @@ public final class SessionImpl extends ServerResource implements Session {
         Representation representation = null;
 
         if (getChallengeResponse() != null) {
-        	extractTokenAndSetValues();
-        	representation = getAttributesRepresentation();
+            extractTokenAndSetValues();
+            representation = getAttributesRepresentation();
         } else {
             setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
         }
@@ -246,12 +246,12 @@ public final class SessionImpl extends ServerResource implements Session {
     }
     
     private Representation getAttributesRepresentation() {
-    	Representation representation = null;
+        Representation representation = null;
     	
-    	try {
-    		extractTokenAndSetValues();
-    		representation = sessionProvisionerProxy.getAttributes();
-    	} catch (ResourceException e) {
+        try {
+            extractTokenAndSetValues();
+            representation = sessionProvisionerProxy.getAttributes();
+        } catch (ResourceException e) {
     	    handleResourceException(e);
     	} catch (Exception e) {
     	    handleException(e.getMessage());
@@ -277,11 +277,11 @@ public final class SessionImpl extends ServerResource implements Session {
     public void authenticateToken() {
         if (getChallengeResponse() != null) {
             try {
-            	extractTokenAndSetValues();
-            	sessionProvisionerProxy.authenticateToken();
-            	User authenticatedUser = sessionProvisionerProxy.getClientInfo().getUser();
-            	getRequest().getClientInfo().setUser(authenticatedUser);
-            	getRequest().getClientInfo().setAuthenticated(true);
+                extractTokenAndSetValues();
+                sessionProvisionerProxy.authenticateToken();
+                User authenticatedUser = sessionProvisionerProxy.getClientInfo().getUser();
+                getRequest().getClientInfo().setUser(authenticatedUser);
+                getRequest().getClientInfo().setAuthenticated(true);
             } catch (ResourceException e) {
                 handleResourceException(e);
             } catch (Exception e) {
@@ -301,8 +301,8 @@ public final class SessionImpl extends ServerResource implements Session {
     public void logout() {
         if (getChallengeResponse() != null) {
             try {
-            	extractTokenAndSetValues();
-            	sessionProvisionerProxy.logout();
+                extractTokenAndSetValues();
+                sessionProvisionerProxy.logout();
             } catch (ResourceException e) {
                 handleResourceException(e);
             } catch (Exception e) {
@@ -314,8 +314,8 @@ public final class SessionImpl extends ServerResource implements Session {
     }
     
     private void extractTokenAndSetValues() {
-    	token = getChallengeResponse().getRawValue();
-    	sessionProvisionerProxy.setToken(token);
+        token = getChallengeResponse().getRawValue();
+        sessionProvisionerProxy.setToken(token);
     }
 	
     /**
@@ -329,7 +329,7 @@ public final class SessionImpl extends ServerResource implements Session {
      * 		   authorized to perform the given method on the resource at the uri 
      */
 	public boolean isAuthorized(String token, String uri, String method) {
-		return sessionProvisionerProxy.isAuthorized(uri, method, token);
+	    return sessionProvisionerProxy.isAuthorized(uri, method, token);
 	}
 	
     private void handleResourceException(ResourceException e) {
@@ -341,7 +341,7 @@ public final class SessionImpl extends ServerResource implements Session {
     }
     
     private void handleException(String message) {
-    	handleResourceException(new ResourceException(Status.SERVER_ERROR_INTERNAL, message));
+        handleResourceException(new ResourceException(Status.SERVER_ERROR_INTERNAL, message));
     }
     
     public void setToken(String token) {

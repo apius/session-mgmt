@@ -63,7 +63,7 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      * @return StringRepresentation containing the token
      */
     public Representation createSession(Form form) {
-    	Representation representation = null;
+        Representation representation = null;
     	
         setReference(getReference().
                 addSegment("identity").
@@ -75,15 +75,15 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
         //
         // http://blogs.sun.com/docteger/entry/opensso_entitlements_service_rest_interfaces
         try {
-        	token = this.post(form).getText().replace("token.id=", "").trim(); //Yes, there is a white space.
-        	representation = new StringRepresentation(token);
-		} catch (ResourceException e) {
-			handleResourceException(e);
-		} catch (IOException e) {
-			handleException(e.getMessage());
-		}
-		
-		return representation;
+            token = this.post(form).getText().replace("token.id=", "").trim(); //Yes, there is a white space.
+            representation = new StringRepresentation(token);
+        } catch (ResourceException e) {
+    	    handleResourceException(e);
+    	} catch (IOException e) {
+    	    handleException(e.getMessage());
+    	}
+    	
+    	return representation;
     }
     
     /**
@@ -97,33 +97,33 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
     public Representation getAttributes() {  
         Representation representation = null;
         
-    	try {
-			representation = responseHelper.writeSessionAttributesFeed(getSessionAttributesResponseString());
-		} catch (ResourceException e) {
-			handleResourceException(e);
-		}
-		
-		return representation;
+        try {
+            representation = responseHelper.writeSessionAttributesFeed(getSessionAttributesResponseString());
+        } catch (ResourceException e) {
+            handleResourceException(e);
+        }
+    	
+        return representation;
     }
     
     private String getSessionAttributesResponseString() {
         String responseString = "";
         
-    	setReference(getReference().
+        setReference(getReference().
                 addSegment("identity").
                 addSegment("attributes").
                 addQueryParameter("subjectid", token));      
         try {
-        	responseString = this.get().getText();
+            responseString = this.get().getText();
         } catch (ResourceException e) {
-        	handleResourceException(e);
-		} catch (IOException e) {
-			handleException(e.getMessage());
-		}
-		
-		return responseString;
+            handleResourceException(e);
+        } catch (IOException e) {
+            handleException(e.getMessage());
+        }
+    	
+        return responseString;
     }
-
+    
     /**
      * Can be used to authenticate the OpenAM session represented by the token
      * as well as to refresh the time left before an inactive timeout. Updates
@@ -132,17 +132,17 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      * 
      * @return void
      */
-	public void authenticateToken() {
-		ClientInfo clientInfo = getRequest().getClientInfo();
-		
-		try {
-			clientInfo.setUser(new User(getIdentifier()));
-			clientInfo.setAuthenticated(true);
-		} catch (ResourceException e) {
-			handleResourceException(e);
-		}	
-	}
-	
+    public void authenticateToken() {
+        ClientInfo clientInfo = getRequest().getClientInfo();
+    	
+        try {
+            clientInfo.setUser(new User(getIdentifier()));
+            clientInfo.setAuthenticated(true);
+        } catch (ResourceException e) {
+            handleResourceException(e);
+        }	
+    }
+    
     /**
      * Invalidates the session and effectively logs out the user.
      * 
@@ -158,9 +158,9 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
         try {
             this.get().getText();
         } catch (ResourceException e) {
-        	handleResourceException(e);
+            handleResourceException(e);
         } catch (IOException e) {
-        	handleException(e.getMessage());
+            handleException(e.getMessage());
         }
     }
     
@@ -176,7 +176,7 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      * 		   authorized to perform the given method on the resource at the uri 
      */
     public boolean isAuthorized(String token, String uri, String method) {
-    	boolean isAuthorized  = false;
+        boolean isAuthorized  = false;
     	
         setReference(getReference().
                 addSegment("identity").
@@ -185,14 +185,14 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
                 addQueryParameter("action", method).
                 addQueryParameter("subjectid", token));
         try {
-        	isAuthorized = responseHelper.extractBooleanFromResponseString(this.get().getText());
-		} catch (ResourceException e) {
-			handleResourceException(e);
-		} catch (IOException e) {
-			handleException(e.getMessage());
-		}
-		
-		return isAuthorized;
+            isAuthorized = responseHelper.extractBooleanFromResponseString(this.get().getText());
+        } catch (ResourceException e) {
+            handleResourceException(e);
+        } catch (IOException e) {
+            handleException(e.getMessage());
+        }
+    	
+        return isAuthorized;
     }
     
     /**
@@ -203,17 +203,17 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      * @return identifier string (i.e. username)
      */
     public String getIdentifier() {
-    	String identifier = "";
+        String identifier = "";
     	
         try {
-			identifier = responseHelper.extractUsernameFromSessionAttributes(getSessionAttributesResponseString());
+            identifier = responseHelper.extractUsernameFromSessionAttributes(getSessionAttributesResponseString());
         } catch (ResourceException e) {
-			handleResourceException(e);
-		}
-		
-		return identifier;
+            handleResourceException(e);
+        }
+    	
+        return identifier;
     }
-	
+    
     /**
      * The <code>ServerResource</code> extracts this value from the 
      * Authorization header and sets it here so that it will be available 
@@ -222,11 +222,11 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      * @param token
      */
     public void setToken(String token) {
-    	this.token = token;
+        this.token = token;
     }
     
     private void handleResourceException(ResourceException e) {
-    	// If the user passes in an invalid session token to the logout service, 
+        // If the user passes in an invalid session token to the logout service, 
         // OpenAM returns a 500. The APIUS framework prefers to send back a 401 
         // since the reality is that the user is trying to access a resource with 
         // an unauthorized credential. So we check the entity for "Invalid session 
@@ -240,7 +240,7 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
     }
     
     private void handleException(String message) {
-    	handleResourceException(new ResourceException(Status.SERVER_ERROR_INTERNAL, message));
+        handleResourceException(new ResourceException(Status.SERVER_ERROR_INTERNAL, message));
     }
-    
+
 }

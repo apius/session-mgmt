@@ -45,7 +45,7 @@ public class SessionAuthenticatorHelper extends AuthenticatorHelper {
         new ChallengeScheme(
                 "HTTP_APIUS", 
                 "APIUS", 
-                "A custom challenge authentication scheme for when a session token is used as the authenticating credential.");
+            "A custom challenge authentication scheme for when a session token is used as the authenticating credential.");
     
     /**
      * Constructor
@@ -59,7 +59,7 @@ public class SessionAuthenticatorHelper extends AuthenticatorHelper {
                                  ChallengeRequest cr, 
                                  Response response, 
                                  Series<Parameter> httpHeaders) throws IOException {
-        if (cr.getRealm() != null) {
+        if (cr.getRealm() != nul) {
             cw.appendQuotedChallengeParameter("realm", cr.getRealm());
         }
     }

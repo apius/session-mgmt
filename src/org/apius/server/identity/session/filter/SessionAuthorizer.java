@@ -56,12 +56,12 @@ public class SessionAuthorizer extends Authorizer {
      * @param sessionProxy
      */
     public SessionAuthorizer(Session sessionProvisionerProxy) {
-    	this.sessionProvisionerProxy = sessionProvisionerProxy;
+        this.sessionProvisionerProxy = sessionProvisionerProxy;
     }
     
     @Override
     protected boolean authorize(Request request, Response response) {
-    	return (isAuthorized(request, response));
+        return (isAuthorized(request, response));
     }
     
     private boolean isAuthorized(Request request, Response response) {

@@ -44,7 +44,7 @@ import org.restlet.resource.Put;
  */
 public interface Session {
     
-	/**
+    /**
      * Requests the session provisioner to create a session on behalf of the 
      * user whose credentials have been passed in the request. Accepts an
      * identifier/secret (i.e. username/password) pair as parameters in the 
@@ -56,15 +56,15 @@ public interface Session {
     @Post
     abstract Representation createSession(Form form);
 	
-	/**
+    /**
      * Requests session provisioner to respond with attributes associated with the
      * session represented by the token.
      * 
      * @return Representation of the session attributes
      */
-	@Get
+    @Get
     abstract Representation getAttributes();
-	
+    
     /**
      * <p>
      * This call authenticates the user represented by the session by validating 
@@ -91,7 +91,7 @@ public interface Session {
      */
     @Put
     abstract void authenticateToken();
-	
+    
     /**
      * This call invalidates the session represented by the token in the 
      * Authorization header, essentially logging out the user.
@@ -121,5 +121,5 @@ public interface Session {
      * @param token
      */
     abstract void setToken(String token);
-    
+
 }
