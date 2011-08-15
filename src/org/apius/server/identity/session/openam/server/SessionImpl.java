@@ -328,9 +328,9 @@ public final class SessionImpl extends ServerResource implements Session {
      * @return boolean indicating whether the session represented by the token is
      * 		   authorized to perform the given method on the resource at the uri 
      */
-	public boolean isAuthorized(String token, String uri, String method) {
-	    return sessionProvisionerProxy.isAuthorized(uri, method, token);
-	}
+    public boolean isAuthorized(String token, String uri, String method) {
+        return sessionProvisionerProxy.isAuthorized(uri, method, token);
+    }
 	
     private void handleResourceException(ResourceException e) {
         if (e.getStatus().equals(Status.CLIENT_ERROR_UNAUTHORIZED)) {
