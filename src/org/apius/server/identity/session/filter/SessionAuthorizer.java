@@ -61,17 +61,14 @@ public class SessionAuthorizer extends Authorizer {
     
     @Override
     protected boolean authorize(Request request, Response response) {
-        return (isAuthorized(request, response));
-    }
-    
-    private boolean isAuthorized(Request request, Response response) {
         boolean isAuthorized = false;
         
         try {
             if (request.getChallengeResponse() != null) {
-                isAuthorized = sessionProvisionerProxy.isAuthorized(request.getOriginalRef().toString(), 
-                                                                    request.getMethod().getName(), 
-                                                                    request.getChallengeResponse().getRawValue());
+                isAuthorized = 
+                    sessionProvisionerProxy.isAuthorized(request.getOriginalRef().toString(), 
+                                                         request.getMethod().getName(), 
+                                                         request.getChallengeResponse().getRawValue());
             }
         } catch (ResourceException e) {
             response.setStatus(e.getStatus(), e.getMessage());
