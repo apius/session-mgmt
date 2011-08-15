@@ -59,7 +59,7 @@ public class SessionAuthenticatorHelper extends AuthenticatorHelper {
                                  ChallengeRequest cr, 
                                  Response response, 
                                  Series<Parameter> httpHeaders) throws IOException {
-        if (cr.getRealm() != nul) {
+        if (cr.getRealm() != null) {
             cw.appendQuotedChallengeParameter("realm", cr.getRealm());
         }
     }
