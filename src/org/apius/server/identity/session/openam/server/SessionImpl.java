@@ -141,10 +141,10 @@ public final class SessionImpl extends ServerResource implements Session {
      * @param responseHelper
      * @param cookieSetting
      */
-    public SessionImpl(Session sessionProvisionerProxy, 
+    public SessionImpl(SessionProvisionerProxy sessionProvisionerProxy, 
                        SessionAuthenticator sessionAuthenticator,
                        CookieSetting cookieSetting) {
-        this.sessionProvisionerProxy = (SessionProvisionerProxy) sessionProvisionerProxy;
+        this.sessionProvisionerProxy = sessionProvisionerProxy;
         this.sessionAuthenticator = sessionAuthenticator;
         this.cookieSetting = cookieSetting;
     }
