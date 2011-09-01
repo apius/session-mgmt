@@ -134,12 +134,10 @@ public final class SessionProvisionerProxy extends ClientResource implements Ses
      */
     public void authenticateToken() {
         ClientInfo clientInfo = getRequest().getClientInfo();
-    	 
+    	
         try {
-            String identifier = getIdentifier();
-            clientInfo.setUser(new User(identifier));
+            clientInfo.setUser(new User(getIdentifier()));
             clientInfo.setAuthenticated(true);
-            getRequest().getChallengeResponse().setIdentifier(identifier);
         } catch (ResourceException e) {
             handleResourceException(e);
         }	
