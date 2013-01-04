@@ -1,4 +1,4 @@
-APIUS 0.2.3 (August 2011)
+APIUS Session Mgmt 0.2.3 (August 2011)
 -------------------------------------
 http://www.apius.org
 
